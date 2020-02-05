@@ -25,6 +25,7 @@ import (
 	"k8s.io/autoscaler/cluster-autoscaler/cloudprovider/azure"
 	"k8s.io/autoscaler/cluster-autoscaler/cloudprovider/baiducloud"
 	"k8s.io/autoscaler/cluster-autoscaler/cloudprovider/digitalocean"
+	"k8s.io/autoscaler/cluster-autoscaler/cloudprovider/hetzner"
 	"k8s.io/autoscaler/cluster-autoscaler/cloudprovider/gce"
 	"k8s.io/autoscaler/cluster-autoscaler/cloudprovider/magnum"
 	"k8s.io/autoscaler/cluster-autoscaler/cloudprovider/packet"
@@ -40,6 +41,7 @@ var AvailableCloudProviders = []string{
 	cloudprovider.BaiducloudProviderName,
 	cloudprovider.MagnumProviderName,
 	cloudprovider.DigitalOceanProviderName,
+	cloudprovider.HetznerProviderName,
 }
 
 // DefaultCloudProvider is GCE.
@@ -59,6 +61,8 @@ func buildCloudProvider(opts config.AutoscalingOptions, do cloudprovider.NodeGro
 		return baiducloud.BuildBaiducloud(opts, do, rl)
 	case cloudprovider.DigitalOceanProviderName:
 		return digitalocean.BuildDigitalOcean(opts, do, rl)
+	case cloudprovider.HetznerProviderName:
+		return hetzner.BuildHetznerCloud(opts, do, rl)
 	case cloudprovider.MagnumProviderName:
 		return magnum.BuildMagnum(opts, do, rl)
 	case packet.ProviderName:

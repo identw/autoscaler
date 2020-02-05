@@ -15,6 +15,7 @@ require (
 	github.com/Azure/go-autorest/autorest/to v0.2.0
 	github.com/aws/aws-sdk-go v1.28.2
 	github.com/digitalocean/godo v1.27.0
+	github.com/hetznercloud/hcloud-go v1.17.0
 	github.com/ghodss/yaml v1.0.0
 	github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af
 	github.com/json-iterator/go v1.1.8
