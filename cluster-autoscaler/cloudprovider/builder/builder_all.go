@@ -33,6 +33,7 @@ import (
 	"k8s.io/autoscaler/cluster-autoscaler/cloudprovider/exoscale"
 	"k8s.io/autoscaler/cluster-autoscaler/cloudprovider/gce"
 	"k8s.io/autoscaler/cluster-autoscaler/cloudprovider/hetzner"
+	hetznerIdentw "k8s.io/autoscaler/cluster-autoscaler/cloudprovider/hetzner-identw"
 	"k8s.io/autoscaler/cluster-autoscaler/cloudprovider/huaweicloud"
 	"k8s.io/autoscaler/cluster-autoscaler/cloudprovider/ionoscloud"
 	"k8s.io/autoscaler/cluster-autoscaler/cloudprovider/linode"
@@ -58,6 +59,7 @@ var AvailableCloudProviders = []string{
 	cloudprovider.ExoscaleProviderName,
 	cloudprovider.HuaweicloudProviderName,
 	cloudprovider.HetznerProviderName,
+	cloudprovider.HetznerIdentwProviderName,
 	cloudprovider.OracleCloudProviderName,
 	cloudprovider.OVHcloudProviderName,
 	cloudprovider.ClusterAPIProviderName,
@@ -103,6 +105,8 @@ func buildCloudProvider(opts config.AutoscalingOptions, do cloudprovider.NodeGro
 		return ovhcloud.BuildOVHcloud(opts, do, rl)
 	case cloudprovider.HetznerProviderName:
 		return hetzner.BuildHetzner(opts, do, rl)
+	case cloudprovider.HetznerIdentwProviderName:
+		return hetznerIdentw.BuildHetznerIdentwCloud(opts, do, rl)
 	case cloudprovider.PacketProviderName:
 		return packet.BuildPacket(opts, do, rl)
 	case cloudprovider.ClusterAPIProviderName:
