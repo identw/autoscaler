@@ -54,6 +54,8 @@ const (
 	GceProviderName = "gce"
 	// HetznerProviderName gets the provider name of hetzner
 	HetznerProviderName = "hetzner"
+	// HetznerIdentwProviderName gets the provider name of hetzner
+	HetznerIdentwProviderName = "hetzner-identw"
 	// MagnumProviderName gets the provider name of magnum
 	MagnumProviderName = "magnum"
 	// KamateraProviderName gets the provider name of kamatera
