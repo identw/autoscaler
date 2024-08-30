@@ -47,11 +47,17 @@ func listNodePools(m *Manager) ([]*NodePool, error) {
 		}
 	
 		var nodes []*Node
+
+		if (len(servers) < 1) {
+			klog.Errorf("listNodePools() DEBUG: pool: \"%s\" is empty\n", poolName)
+		}
+
 		for _, s := range servers {
 			var node Node
 			node.ID = strconv.Itoa(s.ID)
 			node.Name = s.Name
 			node.Status = s.Status
+			klog.Errorf("listNodePools() DEBUG: add node to pool: \"%s\", node: \"%s\"\n", poolName, node.Name)
 	
 			nodes = append(nodes, &node)
 		}
