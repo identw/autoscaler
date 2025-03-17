@@ -17,7 +17,7 @@ limitations under the License.
 package hetznerIdentw
 
 import (
-	"k8s.io/autoscaler/cluster-autoscaler/cloudprovider/hetzner-identw/hcloud-go/hcloud"
+	"k8s.io/autoscaler/cluster-autoscaler/cloudprovider/hetzner/hcloud-go/hcloud"
 	apiv1 "k8s.io/api/core/v1"
 )
 
@@ -34,7 +34,7 @@ type Config struct {
 	Token string                         `json:"token"`
 	Endpoint string                      `json:"endpoint"`
 	ProviderPrefix string                `json:"provider_prefix"`
-	SSHKeys []int                        `json:"ssh_keys"`
+	SSHKeys []int64                      `json:"ssh_keys"`
 	InstanceType string                  `json:"instance_type"`
 	Location string                      `json:"location"`
 	Image Image	                         `json:"image"`
@@ -46,7 +46,7 @@ type Config struct {
 // ConfigPool config for node pool
 type ConfigPool struct {
 	NodeNamePrefix string           `json:"node_name_prefix"`
-	SSHKeys []int                   `json:"ssh_keys"`
+	SSHKeys []int64                 `json:"ssh_keys"`
 	InstanceType string             `json:"instance_type"`
 	Location string                 `json:"location"`
 	Image Image	                    `json:"image"`
@@ -71,7 +71,7 @@ type CloudConfig struct {
 
 // Image - hetzner image https://godoc.org/github.com/hetznercloud/hcloud-go/hcloud#Image
 type Image struct {
-	ID int      `json:"id"`
+	ID int64    `json:"id"`
 	Name string `json:"name"`
 	Type string `json:"type"`
 
@@ -97,7 +97,7 @@ type NodePool struct {
 	Location string
 	NodeNamePrefix string
 	Image Image
-	SSHKeys []int
+	SSHKeys []int64
 	CloudInit string
 }
 

@@ -26,7 +26,7 @@ import (
 	"io"
 	"io/ioutil"
 
-	"k8s.io/autoscaler/cluster-autoscaler/cloudprovider/hetzner-identw/hcloud-go/hcloud"
+	"k8s.io/autoscaler/cluster-autoscaler/cloudprovider/hetzner/hcloud-go/hcloud"
 	"k8s.io/klog/v2"
 	"k8s.io/autoscaler/cluster-autoscaler/cloudprovider"
 )

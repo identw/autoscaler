@@ -23,7 +23,7 @@ import (
 	"strconv"
 
 	"k8s.io/klog/v2"
-	"k8s.io/autoscaler/cluster-autoscaler/cloudprovider/hetzner-identw/hcloud-go/hcloud"
+	"k8s.io/autoscaler/cluster-autoscaler/cloudprovider/hetzner/hcloud-go/hcloud"
 	apiv1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
@@ -73,6 +73,11 @@ func (n *NodeGroup) IncreaseSize(delta int) error {
 	}
 	n.nodePool.Count = targetSize
 	return nil
+}
+
+// AtomicIncreaseSize is not implemented.
+func (n *NodeGroup) AtomicIncreaseSize(delta int) error {
+	return cloudprovider.ErrNotImplemented
 }
 
 // DeleteNodes deletes nodes from this node group (and also increasing the size

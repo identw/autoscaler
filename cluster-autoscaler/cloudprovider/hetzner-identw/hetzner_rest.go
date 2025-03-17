@@ -21,7 +21,7 @@ import (
 	"strconv"
 	"math/rand"
 	"time"
-	"k8s.io/autoscaler/cluster-autoscaler/cloudprovider/hetzner-identw/hcloud-go/hcloud"
+	"k8s.io/autoscaler/cluster-autoscaler/cloudprovider/hetzner/hcloud-go/hcloud"
 	"k8s.io/klog/v2"
 
 )
@@ -54,7 +54,7 @@ func listNodePools(m *Manager) ([]*NodePool, error) {
 
 		for _, s := range servers {
 			var node Node
-			node.ID = strconv.Itoa(s.ID)
+			node.ID = strconv.Itoa(int(s.ID))
 			node.Name = s.Name
 			node.Status = s.Status
 			klog.Errorf("listNodePools() DEBUG: add node to pool: \"%s\", node: \"%s\"\n", poolName, node.Name)
@@ -138,7 +138,7 @@ func createNodes(n *NodeGroup, amountNodes int) error {
 func deleteNode(client *hcloud.Client, nodeID string) error {
 	id, _ := strconv.Atoi(nodeID)
 	server := &hcloud.Server {
-		ID: id,
+		ID: int64(id),
 	}
 
 	_, err := client.Server.Delete(context.Background(), server)
