@@ -88,7 +88,7 @@ func newManager(configReader io.Reader, cp cloudprovider.NodeGroupDiscoveryOptio
 
 		// InstanceType
 		if cfg.Pools[poolName].InstanceType == "" && cfg.InstanceType == "" {
-			cfg.Pools[poolName].InstanceType = "cx41"
+			cfg.Pools[poolName].InstanceType = "cpx32"
 		}
 		if cfg.Pools[poolName].InstanceType == "" {
 			cfg.Pools[poolName].InstanceType = cfg.InstanceType
@@ -111,8 +111,8 @@ func newManager(configReader io.Reader, cp cloudprovider.NodeGroupDiscoveryOptio
 		// Image
 		if cfg.Pools[poolName].Image == (Image{}) && cfg.Image == (Image{}) {
 			cfg.Pools[poolName].Image = Image{
-				ID: 168855,
-				Name: "ubuntu-18.04",
+				ID: 161547269,
+				Name: "ubuntu-24.04",
 				Type: "system",
 			}
 		}

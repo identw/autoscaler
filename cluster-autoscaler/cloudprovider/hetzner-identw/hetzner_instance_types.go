@@ -86,6 +86,18 @@ var InstanceTypes = map[string]*InstanceType{
 		Memory:       16000000000,
 		Storage:      160000000000,
 	},
+	"cpx22": {
+		InstanceType: "cpx22",
+		VCPU:         2,
+		Memory:       4000000000,
+		Storage:      80000000000,
+	},
+	"cx23": {
+		InstanceType: "cx23",
+		VCPU:         2,
+		Memory:       4000000000,
+		Storage:      40000000000,
+	},
 	"ccx23": {
 		InstanceType: "ccx23",
 		VCPU:         4,
@@ -116,11 +128,23 @@ var InstanceTypes = map[string]*InstanceType{
 		Memory:       32000000000,
 		Storage:      240000000000,
 	},
+	"cpx32": {
+		InstanceType: "cpx32",
+		VCPU:         4,
+		Memory:       8000000000,
+		Storage:      160000000000,
+	},
 	"ccx32": {
 		InstanceType: "ccx32",
 		VCPU:         8,
 		Memory:       32000000000,
 		Storage:      240000000000,
+	},
+	"cx33": {
+		InstanceType: "cx33",
+		VCPU:         4,
+		Memory:       8000000000,
+		Storage:      80000000000,
 	},
 	"ccx33": {
 		InstanceType: "ccx33",
@@ -152,11 +176,23 @@ var InstanceTypes = map[string]*InstanceType{
 		Memory:       64000000000,
 		Storage:      360000000000,
 	},
+	"cpx42": {
+		InstanceType: "cpx42",
+		VCPU:         8,
+		Memory:       16000000000,
+		Storage:      320000000000,
+	},
 	"ccx42": {
 		InstanceType: "ccx42",
 		VCPU:         16,
 		Memory:       64000000000,
 		Storage:      360000000000,
+	},
+	"cx43": {
+		InstanceType: "cx43",
+		VCPU:         8,
+		Memory:       16000000000,
+		Storage:      160000000000,
 	},
 	"ccx43": {
 		InstanceType: "ccx43",
@@ -190,6 +226,12 @@ var InstanceTypes = map[string]*InstanceType{
 		Storage:      600000000000,      
 		
 	},
+	"cpx52": {
+		InstanceType: "cpx52",
+		VCPU:         12,
+		Memory:       24000000000,
+		Storage:      480000000000,
+	},
 	"ccx52": {
 		InstanceType: "ccx52",
 		VCPU:         32,
@@ -197,11 +239,23 @@ var InstanceTypes = map[string]*InstanceType{
 		Storage:      600000000000,
 		
 	},
+	"cx53": {
+		InstanceType: "cx53",
+		VCPU:         16,
+		Memory:       32000000000,
+		Storage:      320000000000,
+	},
 	"ccx53": {
 		InstanceType: "ccx53",
 		VCPU:         32,
 		Memory:       128000000000,
 		Storage:      600000000000,
+	},
+	"cpx62": {
+		InstanceType: "cpx62",
+		VCPU:         16,
+		Memory:       32000000000,
+		Storage:      640000000000,
 	},
 	"ccx62": {
 		InstanceType: "ccx62",
