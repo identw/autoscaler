@@ -1,4 +1,4 @@
-FROM docker.io/alpine:3.22.2 as certificates
+FROM docker.io/alpine:3.22.3 as certificates
 RUN apk add --no-cache ca-certificates bash
 
 FROM scratch

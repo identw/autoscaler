@@ -72,28 +72,23 @@ func (cp *hetznerIdentwCloudProvider) NodeGroups() []cloudprovider.NodeGroup {
 // occurred. Must be implemented.
 func (cp *hetznerIdentwCloudProvider) NodeGroupForNode(node *apiv1.Node) (cloudprovider.NodeGroup, error) {
 	providerID := node.Spec.ProviderID
-	nodeID := toNodeID(providerID)
-
-	klog.V(4).Infof("checking nodegroup for node ID: %q", nodeID)
 
 	// // NOTE(arslan): the number of node groups per cluster is usually very
 	// // small. So even though this looks like quadratic runtime, it's OK to
 	// // proceed with this.
 	for _, group := range cp.manager.nodeGroups {
-		klog.V(5).Infof("iterating over node group %q", group.Id())
 		nodes, err := group.Nodes()
 		if err != nil {
 			return nil, err
 		}
 
-		for _, node := range nodes {
-			klog.V(5).Infof("checking node has: %q want: %q", node.Id, nodeID)
+		for _, n := range nodes {
 			// CA uses node.Spec.ProviderID when looking for (un)registered nodes,
 			// so we need to use it here too.
-			if node.Id != providerID {
+			if n.Id != providerID {
 				continue
 			}
-			klog.V(4).Infof("return group.Id: %q, for node.ID: %q", group.id, node.Id)
+			klog.V(5).Infof("Node: %q (id: %q) in group %q", node.Name, providerID, group.Id())
 			return group, nil
 		}
 	}
@@ -163,7 +158,6 @@ func (cp *hetznerIdentwCloudProvider) Cleanup() error {
 // update cloud provider state. In particular the list of node groups returned
 // by NodeGroups() can change as a result of CloudProvider.Refresh().
 func (cp *hetznerIdentwCloudProvider) Refresh() error {
-	klog.V(4).Info("Refreshing node group cache")
 	return cp.manager.Refresh()
 }
 
