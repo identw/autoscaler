@@ -17,18 +17,18 @@ limitations under the License.
 package hetznerIdentw
 
 import (
-	"strconv"
-	"encoding/json"
 	"encoding/base64"
+	"encoding/json"
 	"errors"
 	"fmt"
-	"strings"
 	"io"
 	"io/ioutil"
+	"strconv"
+	"strings"
 
+	"k8s.io/autoscaler/cluster-autoscaler/cloudprovider"
 	"k8s.io/autoscaler/cluster-autoscaler/cloudprovider/hetzner/hcloud-go/hcloud"
 	"k8s.io/klog/v2"
-	"k8s.io/autoscaler/cluster-autoscaler/cloudprovider"
 )
 
 const (
@@ -77,7 +77,7 @@ func newManager(configReader io.Reader, cp cloudprovider.NodeGroupDiscoveryOptio
 		}
 		cfg.Pools[poolName].MinNodes, _ = strconv.Atoi(nodes[0])
 		cfg.Pools[poolName].MaxNodes, _ = strconv.Atoi(nodes[1])
-		
+
 		// SSHKeys
 		if len(cfg.Pools[poolName].SSHKeys) == 0 && len(cfg.SSHKeys) == 0 {
 			return nil, fmt.Errorf("Config hetzner pool error: SSHKeys not defined")
@@ -111,7 +111,7 @@ func newManager(configReader io.Reader, cp cloudprovider.NodeGroupDiscoveryOptio
 		// Image
 		if cfg.Pools[poolName].Image == (Image{}) && cfg.Image == (Image{}) {
 			cfg.Pools[poolName].Image = Image{
-				ID: 161547269,
+				ID:   161547269,
 				Name: "ubuntu-24.04",
 				Type: "system",
 			}
@@ -148,10 +148,10 @@ func newManager(configReader io.Reader, cp cloudprovider.NodeGroupDiscoveryOptio
 	cache := newServersCache(hcloudClient)
 
 	m := &Manager{
-		client:     hcloudClient,
-		nodeGroups: make([]*NodeGroup, 0),
+		client:      hcloudClient,
+		nodeGroups:  make([]*NodeGroup, 0),
 		cloudConfig: &cloudConfig,
-		cache: cache,
+		cache:       cache,
 	}
 
 	return m, nil
@@ -160,7 +160,7 @@ func newManager(configReader io.Reader, cp cloudprovider.NodeGroupDiscoveryOptio
 // Refresh refreshes the cache holding the nodegroups. This is called by the CA
 // based on the `--scan-interval`. By default it's 10 seconds.
 func (m *Manager) Refresh() error {
-	nodePools, err:= listNodePools(m)
+	nodePools, err := listNodePools(m)
 	if err != nil {
 		return err
 	}

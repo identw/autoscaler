@@ -19,19 +19,18 @@ package hetznerIdentw
 import (
 	"fmt"
 	"math/rand"
-	"time"
 	"strconv"
+	"time"
 
-	"k8s.io/klog/v2"
-	"k8s.io/autoscaler/cluster-autoscaler/cloudprovider/hetzner/hcloud-go/hcloud"
 	apiv1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/autoscaler/cluster-autoscaler/cloudprovider"
+	"k8s.io/autoscaler/cluster-autoscaler/cloudprovider/hetzner/hcloud-go/hcloud"
 	"k8s.io/autoscaler/cluster-autoscaler/config"
 	"k8s.io/autoscaler/cluster-autoscaler/simulator/framework"
+	"k8s.io/klog/v2"
 )
-
 
 // MaxSize returns maximum size of the node group.
 func (n *NodeGroup) MaxSize() int {
@@ -176,7 +175,7 @@ func (n *NodeGroup) TemplateNodeInfo() (*framework.NodeInfo, error) {
 	}
 
 	instanceType := InstanceTypes[n.nodePool.InstanceType]
-	
+
 	node.Status.Capacity[apiv1.ResourcePods] = *resource.NewQuantity(110, resource.DecimalSI)
 	node.Status.Capacity[apiv1.ResourceCPU] = *resource.NewQuantity(instanceType.VCPU, resource.DecimalSI)
 	node.Status.Capacity[apiv1.ResourceMemory] = *resource.NewQuantity(instanceType.Memory, resource.DecimalSI)
@@ -240,7 +239,6 @@ func (n *NodeGroup) Autoprovisioned() bool {
 func (n *NodeGroup) GetOptions(defaults config.NodeGroupAutoscalingOptions) (*config.NodeGroupAutoscalingOptions, error) {
 	return nil, cloudprovider.ErrNotImplemented
 }
-
 
 // toInstances converts a slice of *godo.KubernetesNode to
 // cloudprovider.Instance

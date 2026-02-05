@@ -17,45 +17,45 @@ limitations under the License.
 package hetznerIdentw
 
 import (
-	"k8s.io/autoscaler/cluster-autoscaler/cloudprovider/hetzner/hcloud-go/hcloud"
 	apiv1 "k8s.io/api/core/v1"
+	"k8s.io/autoscaler/cluster-autoscaler/cloudprovider/hetzner/hcloud-go/hcloud"
 )
 
 // Manager handles Hetzner communication and data caching of
 // node groups (node pools in Hetzner)
 type Manager struct {
-	client *hcloud.Client
-	nodeGroups []*NodeGroup
+	client      *hcloud.Client
+	nodeGroups  []*NodeGroup
 	cloudConfig *CloudConfig
-	cache *serversCache
+	cache       *serversCache
 }
 
 // Config from --cloud-config file
 type Config struct {
-	Token string                         `json:"token"`
-	Endpoint string                      `json:"endpoint"`
-	ProviderPrefix string                `json:"provider_prefix"`
-	SSHKeys []int64                      `json:"ssh_keys"`
-	InstanceType string                  `json:"instance_type"`
-	Location string                      `json:"location"`
-	Image Image	                         `json:"image"`
-	CloudInit string                     `json:"cloud_init"`
-	Pools map[string]*ConfigPool         `json:"pools"`
+	Token          string                 `json:"token"`
+	Endpoint       string                 `json:"endpoint"`
+	ProviderPrefix string                 `json:"provider_prefix"`
+	SSHKeys        []int64                `json:"ssh_keys"`
+	InstanceType   string                 `json:"instance_type"`
+	Location       string                 `json:"location"`
+	Image          Image                  `json:"image"`
+	CloudInit      string                 `json:"cloud_init"`
+	Pools          map[string]*ConfigPool `json:"pools"`
 	// KubeBootstrap CloudInitTemplateData  `json:kube_bootstrap`
 }
 
 // ConfigPool config for node pool
 type ConfigPool struct {
-	NodeNamePrefix string           `json:"node_name_prefix"`
-	SSHKeys []int64                 `json:"ssh_keys"`
-	InstanceType string             `json:"instance_type"`
-	Location string                 `json:"location"`
-	Image Image	                    `json:"image"`
-	CloudInit string                `json:"cloud_init"`
-	NodeLabels map[string]string    `json:"node_labels"`
-	NodeTaints []apiv1.Taint        `json:"node_taints"`
-	MinNodes int  
-	MaxNodes int
+	NodeNamePrefix string            `json:"node_name_prefix"`
+	SSHKeys        []int64           `json:"ssh_keys"`
+	InstanceType   string            `json:"instance_type"`
+	Location       string            `json:"location"`
+	Image          Image             `json:"image"`
+	CloudInit      string            `json:"cloud_init"`
+	NodeLabels     map[string]string `json:"node_labels"`
+	NodeTaints     []apiv1.Taint     `json:"node_taints"`
+	MinNodes       int
+	MaxNodes       int
 }
 
 // // CloudInitTemplateData represents the variables that can be used in cloudinit templates
@@ -72,51 +72,50 @@ type CloudConfig struct {
 
 // Image - hetzner image https://godoc.org/github.com/hetznercloud/hcloud-go/hcloud#Image
 type Image struct {
-	ID int64    `json:"id"`
+	ID   int64  `json:"id"`
 	Name string `json:"name"`
 	Type string `json:"type"`
-
 }
 
 // Node server https://godoc.org/github.com/hetznercloud/hcloud-go/hcloud#Server
 type Node struct {
-    ID string
-    Name string
-    Status hcloud.ServerStatus
+	ID     string              `json:"id"`
+	Name   string              `json:"name"`
+	Status hcloud.ServerStatus `json:"status"`
 }
 
 // NodePool - abstraction for NodeGroups in Hetzner
 type NodePool struct {
-	ID string
-	Name string
-	Count int
-    MinNodes int
-	MaxNodes int
-	AutoScale bool
-	Nodes []*Node
-	InstanceType string
-	Location string
-	NodeNamePrefix string
-	Image Image
-	SSHKeys []int64
-	CloudInit string
+	ID             string  `json:"id"`
+	Name           string  `json:"name"`
+	Count          int     `json:"count"`
+	MinNodes       int     `json:"min_nodes"`
+	MaxNodes       int     `json:"max_nodes"`
+	AutoScale      bool    `json:"auto_scale"`
+	Nodes          []*Node `json:"nodes"`
+	InstanceType   string  `json:"instance_type"`
+	Location       string  `json:"location"`
+	NodeNamePrefix string  `json:"node_name_prefix"`
+	Image          Image   `json:"image"`
+	SSHKeys        []int64 `json:"ssh_keys"`
+	CloudInit      string
 }
 
 // NodeGroup implements cloudprovider.NodeGroup interface. NodeGroup contains
 // configuration info and functions to control a set of nodes that have the
 // same capacity and set of labels.
 type NodeGroup struct {
-	id string
-	client *hcloud.Client
-	nodePool *NodePool
+	id          string
+	client      *hcloud.Client
+	nodePool    *NodePool
 	cloudConfig *CloudConfig
-	minSize int
-	maxSize int
+	minSize     int
+	maxSize     int
 }
 
 var Locations = map[string]bool{
 	"hel1": true,
 	"nbg1": true,
 	"fsn1": true,
-	"ash": true,
+	"ash":  true,
 }

@@ -204,7 +204,7 @@ var InstanceTypes = map[string]*InstanceType{
 		InstanceType: "cx51",
 		VCPU:         8,
 		Memory:       32000000000,
-		Storage:      240000000000,      
+		Storage:      240000000000,
 	},
 	"cx52": {
 		InstanceType: "cx52",
@@ -216,15 +216,13 @@ var InstanceTypes = map[string]*InstanceType{
 		InstanceType: "cpx51",
 		VCPU:         16,
 		Memory:       32000000000,
-		Storage:      360000000000,      
-		
+		Storage:      360000000000,
 	},
 	"ccx51": {
 		InstanceType: "ccx51",
 		VCPU:         32,
 		Memory:       128000000000,
-		Storage:      600000000000,      
-		
+		Storage:      600000000000,
 	},
 	"cpx52": {
 		InstanceType: "cpx52",
@@ -237,7 +235,6 @@ var InstanceTypes = map[string]*InstanceType{
 		VCPU:         32,
 		Memory:       128000000000,
 		Storage:      600000000000,
-		
 	},
 	"cx53": {
 		InstanceType: "cx53",
@@ -261,7 +258,7 @@ var InstanceTypes = map[string]*InstanceType{
 		InstanceType: "ccx62",
 		VCPU:         48,
 		Memory:       192000000000,
-		Storage:      960000000000,      
+		Storage:      960000000000,
 	},
 	"ccx63": {
 		InstanceType: "ccx63",

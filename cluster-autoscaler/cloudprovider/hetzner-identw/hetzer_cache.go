@@ -1,22 +1,23 @@
 package hetznerIdentw
 
 import (
-	"sync"
-	"time"
 	"context"
 	"math/rand"
+	"sync"
+	"time"
+
 	"k8s.io/client-go/tools/cache"
-	"k8s.io/utils/clock"
 	"k8s.io/klog/v2"
+	"k8s.io/utils/clock"
 
 	"k8s.io/autoscaler/cluster-autoscaler/cloudprovider/hetzner/hcloud-go/hcloud"
 )
 
 const (
-	defaultCacheTTL = time.Minute * 3
+	defaultCacheTTL   = time.Minute * 3
 	jitterCacheMinTTL = 10
 	jitterCacheMaxTTL = 60
-	serversCacheKey = "servers-cache"
+	serversCacheKey   = "servers-cache"
 )
 
 type serverCache struct {
@@ -29,7 +30,6 @@ type serversCache struct {
 	client *hcloud.Client
 }
 
-
 type serversCacheClock struct {
 	clock.Clock
 
@@ -40,25 +40,25 @@ type serversCacheClock struct {
 func newServersCache(hc *hcloud.Client) *serversCache {
 	clock := &serversCacheClock{}
 
-	store := cache.NewExpirationStore(func (obj interface{}) (string, error) {
+	store := cache.NewExpirationStore(func(obj interface{}) (string, error) {
 		return obj.(serverCache).name, nil
 	}, &cache.TTLPolicy{
-		TTL: defaultCacheTTL,
+		TTL:   defaultCacheTTL,
 		Clock: clock,
 	})
 	return &serversCache{
-		Store: store,
+		Store:  store,
 		client: hc,
 	}
 }
 
 func randomRange(a int, b int) int {
-	return rand.Intn(b - a + 1) + a
+	return rand.Intn(b-a+1) + a
 }
 
 func (c *serversCacheClock) Since(t time.Time) time.Duration {
 	jitter := time.Duration(randomRange(jitterCacheMinTTL, jitterCacheMaxTTL)) * time.Second
-    return time.Since(t.Add(jitter))
+	return time.Since(t.Add(jitter))
 }
 
 func (sc *serversCache) getServers() ([]*hcloud.Server, error) {
@@ -72,13 +72,13 @@ func (sc *serversCache) getServers() ([]*hcloud.Server, error) {
 	}
 
 	if !exists {
-		listOpts := hcloud.ListOpts {Page: 1, PerPage: 0}
+		listOpts := hcloud.ListOpts{Page: 1, PerPage: 0}
 		var serverStatus []hcloud.ServerStatus
 		serverStatus = append(serverStatus, hcloud.ServerStatusRunning)
 		serverStatus = append(serverStatus, hcloud.ServerStatusInitializing)
 		serverStatus = append(serverStatus, hcloud.ServerStatusStarting)
 		serverStatus = append(serverStatus, hcloud.ServerStatusDeleting)
-		serverListOpts := hcloud.ServerListOpts {ListOpts: listOpts, Name: "", Status: serverStatus}
+		serverListOpts := hcloud.ServerListOpts{ListOpts: listOpts, Name: "", Status: serverStatus}
 
 		servers, err := sc.client.Server.AllWithOpts(context.Background(), serverListOpts)
 		if err != nil {
@@ -86,11 +86,12 @@ func (sc *serversCache) getServers() ([]*hcloud.Server, error) {
 			return nil, err
 		}
 		sc.Add(serverCache{
-			name: serversCacheKey,
+			name:    serversCacheKey,
 			servers: servers,
 		})
 		return servers, nil
 	}
 
-}
+	return nil, nil
 
+}

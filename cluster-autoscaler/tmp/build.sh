@@ -3,7 +3,7 @@ set -xe
 
 version=$1
 
-gofmt cloudprovider/hetzner-identw/*.go 1>/dev/null
+gofmt -w -l cloudprovider/hetzner-identw/*.go 1>/dev/null
 rm -fv ./cluster-autoscaler-arm64
 rm -fv ./cluster-autoscaler-amd64
 make docker-builder

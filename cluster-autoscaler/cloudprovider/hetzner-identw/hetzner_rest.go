@@ -18,12 +18,11 @@ package hetznerIdentw
 
 import (
 	"context"
-	"strconv"
-	"math/rand"
-	"time"
 	"k8s.io/autoscaler/cluster-autoscaler/cloudprovider/hetzner/hcloud-go/hcloud"
 	"k8s.io/klog/v2"
-
+	"math/rand"
+	"strconv"
+	"time"
 )
 
 // listNodePools get servers from API by labelSelector
@@ -41,19 +40,19 @@ func listNodePools(m *Manager) ([]*NodePool, error) {
 	// init Pools
 	for poolName, pool := range m.cloudConfig.Pools {
 		pools[poolName] = &NodePool{
-			ID: poolName,
-			Name: "Hetzner k8s autoscaler: " + poolName,
-			Count: 0,
-			MinNodes: pool.MinNodes,
-			MaxNodes: pool.MaxNodes,
-			AutoScale: true,
-			Nodes: []*Node{},
-			InstanceType: pool.InstanceType,
-			Location: pool.Location,
+			ID:             poolName,
+			Name:           "Hetzner k8s autoscaler: " + poolName,
+			Count:          0,
+			MinNodes:       pool.MinNodes,
+			MaxNodes:       pool.MaxNodes,
+			AutoScale:      true,
+			Nodes:          []*Node{},
+			InstanceType:   pool.InstanceType,
+			Location:       pool.Location,
 			NodeNamePrefix: pool.NodeNamePrefix,
-			Image: pool.Image,
-			SSHKeys: pool.SSHKeys,
-			CloudInit: pool.CloudInit,
+			Image:          pool.Image,
+			SSHKeys:        pool.SSHKeys,
+			CloudInit:      pool.CloudInit,
 		}
 	}
 
@@ -80,6 +79,7 @@ func listNodePools(m *Manager) ([]*NodePool, error) {
 	for _, pool := range pools {
 		hetznerPools = append(hetznerPools, pool)
 	}
+
 	return hetznerPools, nil
 }
 
@@ -89,15 +89,15 @@ func createNode(n *NodeGroup) error {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	postfixString := strconv.Itoa(r.Intn(10000) + 10000)
 
-	serverType := &hcloud.ServerType {
+	serverType := &hcloud.ServerType{
 		Name: n.nodePool.InstanceType,
 	}
-	image := &hcloud.Image {
-		ID: n.nodePool.Image.ID,
+	image := &hcloud.Image{
+		ID:   n.nodePool.Image.ID,
 		Name: n.nodePool.Image.Name,
 		Type: hcloud.ImageType(n.nodePool.Image.Type),
 	}
-	location := &hcloud.Location {
+	location := &hcloud.Location{
 		Name: n.nodePool.Location,
 	}
 
@@ -108,14 +108,14 @@ func createNode(n *NodeGroup) error {
 
 	labels := make(map[string]string)
 	labels[n.nodePool.ID] = ""
-	serverCreateOpts := hcloud.ServerCreateOpts {
-		Name: n.nodePool.NodeNamePrefix + "-" + postfixString,
+	serverCreateOpts := hcloud.ServerCreateOpts{
+		Name:       n.nodePool.NodeNamePrefix + "-" + postfixString,
 		ServerType: serverType,
-		UserData: n.nodePool.CloudInit,
-		SSHKeys: sshKeys,
-		Image: image,
-		Location: location,
-		Labels: labels,
+		UserData:   n.nodePool.CloudInit,
+		SSHKeys:    sshKeys,
+		Image:      image,
+		Location:   location,
+		Labels:     labels,
 	}
 
 	_, _, err := n.client.Server.Create(context.Background(), serverCreateOpts)
@@ -139,7 +139,7 @@ func createNodes(n *NodeGroup, amountNodes int) error {
 // deleteNode delete server by nodeID
 func deleteNode(client *hcloud.Client, nodeID string) error {
 	id, _ := strconv.Atoi(nodeID)
-	server := &hcloud.Server {
+	server := &hcloud.Server{
 		ID: int64(id),
 	}
 

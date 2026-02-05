@@ -201,7 +201,7 @@ func toProviderID(nodeID string) string {
 	return fmt.Sprintf("%s%s", hetznerProviderIDPrefix, nodeID)
 }
 
-//  get Hetzner node Id from node.spec.ProviderId
+// get Hetzner node Id from node.spec.ProviderId
 func toNodeID(providerID string) string {
 	if strings.HasPrefix(providerID, hetznerProviderIDPrefix) {
 		return strings.ReplaceAll(providerID, hetznerProviderIDPrefix, "")
