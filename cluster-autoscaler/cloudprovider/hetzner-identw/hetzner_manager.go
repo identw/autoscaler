@@ -145,10 +145,13 @@ func newManager(configReader io.Reader, cp cloudprovider.NodeGroupDiscoveryOptio
 
 	hcloudClient := hcloud.NewClient(opts...)
 
+	cache := newServersCache(hcloudClient)
+
 	m := &Manager{
 		client:     hcloudClient,
 		nodeGroups: make([]*NodeGroup, 0),
 		cloudConfig: &cloudConfig,
+		cache: cache,
 	}
 
 	return m, nil

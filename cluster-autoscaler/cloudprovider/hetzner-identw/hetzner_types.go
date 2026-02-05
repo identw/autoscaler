@@ -27,6 +27,7 @@ type Manager struct {
 	client *hcloud.Client
 	nodeGroups []*NodeGroup
 	cloudConfig *CloudConfig
+	cache *serversCache
 }
 
 // Config from --cloud-config file

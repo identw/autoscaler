@@ -30,54 +30,56 @@ import (
 // One label = one pool (nodeGroup)
 func listNodePools(m *Manager) ([]*NodePool, error) {
 	var hetznerPools []*NodePool
+	pools := make(map[string]*NodePool)
 
+	servers, err := m.cache.getServers()
+	if err != nil {
+		klog.Errorf("listNodePools() error get servers from cache, error: %v\n", err)
+		return nil, err
+	}
+
+	// init Pools
 	for poolName, pool := range m.cloudConfig.Pools {
-		listOpts := hcloud.ListOpts {Page: 1, PerPage: 0, LabelSelector: poolName}
-		var serverStatus []hcloud.ServerStatus
-		serverStatus = append(serverStatus, hcloud.ServerStatusRunning)
-		serverStatus = append(serverStatus, hcloud.ServerStatusInitializing)
-		serverStatus = append(serverStatus, hcloud.ServerStatusStarting)
-		serverStatus = append(serverStatus, hcloud.ServerStatusDeleting)
-		serverListOpts := hcloud.ServerListOpts {ListOpts: listOpts, Name: "", Status: serverStatus}
-
-		servers, err := m.client.Server.AllWithOpts(context.Background(), serverListOpts)
-		if err != nil {
-			klog.Errorf("listNodePools() error get servers. Hetzner API (ServerClient.AllWithOpts: https://godoc.org/github.com/hetznercloud/hcloud-go/hcloud#ServerClient.AllWithOpts), error: %v\n", err)
-			return nil, err
-		}
-	
-		var nodes []*Node
-
-		if (len(servers) < 1) {
-			klog.Errorf("listNodePools() DEBUG: pool: \"%s\" is empty\n", poolName)
-		}
-
-		for _, s := range servers {
-			var node Node
-			node.ID = strconv.Itoa(int(s.ID))
-			node.Name = s.Name
-			node.Status = s.Status
-			klog.Errorf("listNodePools() DEBUG: add node to pool: \"%s\", node: \"%s\"\n", poolName, node.Name)
-	
-			nodes = append(nodes, &node)
-		}
-		hetznerPools = append(hetznerPools, &NodePool{
+		pools[poolName] = &NodePool{
 			ID: poolName,
 			Name: "Hetzner k8s autoscaler: " + poolName,
-			Count: len(servers),
+			Count: 0,
 			MinNodes: pool.MinNodes,
 			MaxNodes: pool.MaxNodes,
 			AutoScale: true,
-			Nodes: nodes,
+			Nodes: []*Node{},
 			InstanceType: pool.InstanceType,
 			Location: pool.Location,
 			NodeNamePrefix: pool.NodeNamePrefix,
 			Image: pool.Image,
 			SSHKeys: pool.SSHKeys,
 			CloudInit: pool.CloudInit,
-		})
+		}
 	}
 
+	for _, s := range servers {
+		poolName := ""
+		for name, _ := range m.cloudConfig.Pools {
+			if _, ok := s.Labels[name]; ok {
+				poolName = name
+				break
+			}
+		}
+		if poolName == "" {
+			continue
+		}
+		var node Node
+		node.ID = strconv.Itoa(int(s.ID))
+		node.Name = s.Name
+		node.Status = s.Status
+
+		pools[poolName].Nodes = append(pools[poolName].Nodes, &node)
+		pools[poolName].Count++
+	}
+
+	for _, pool := range pools {
+		hetznerPools = append(hetznerPools, pool)
+	}
 	return hetznerPools, nil
 }
 
