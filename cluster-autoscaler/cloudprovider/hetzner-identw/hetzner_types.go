@@ -109,6 +109,7 @@ type NodeGroup struct {
 	client      *hcloud.Client
 	nodePool    *NodePool
 	cloudConfig *CloudConfig
+	cache       *serversCache
 	minSize     int
 	maxSize     int
 }

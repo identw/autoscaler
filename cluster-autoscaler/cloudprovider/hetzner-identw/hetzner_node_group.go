@@ -66,11 +66,21 @@ func (n *NodeGroup) IncreaseSize(delta int) error {
 			n.nodePool.Count, targetSize, n.MaxSize())
 	}
 
+	defer func() {
+		// create new servers cache
+		_, err := n.cache.invalidate()
+		if err != nil {
+			klog.Errorf("failed to invalidate cache: %v", err)
+		}
+
+		// Update target size
+		n.nodePool.Count = targetSize
+	}()
+
 	err := createNodes(n, delta)
 	if err != nil {
 		return err
 	}
-	n.nodePool.Count = targetSize
 	return nil
 }
 
@@ -84,6 +94,13 @@ func (n *NodeGroup) AtomicIncreaseSize(delta int) error {
 // given node doesn't belong to this node group. This function should wait
 // until node group size is updated. Implementation required.
 func (n *NodeGroup) DeleteNodes(nodes []*apiv1.Node) error {
+	defer func() {
+		// create new servers cache
+		_, err := n.cache.invalidate()
+		if err != nil {
+			klog.Errorf("failed to invalidate cache: %v", err)
+		}
+	}()
 	for _, node := range nodes {
 		nodeID := toNodeID(node.Spec.ProviderID)
 

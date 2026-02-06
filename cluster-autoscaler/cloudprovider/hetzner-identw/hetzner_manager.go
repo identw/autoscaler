@@ -178,6 +178,7 @@ func (m *Manager) Refresh() error {
 			id:          nodePool.ID,
 			client:      m.client,
 			cloudConfig: m.cloudConfig,
+			cache:       m.cache,
 			nodePool:    nodePool,
 			minSize:     nodePool.MinNodes,
 			maxSize:     nodePool.MaxNodes,

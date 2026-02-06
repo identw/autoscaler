@@ -72,26 +72,33 @@ func (sc *serversCache) getServers() ([]*hcloud.Server, error) {
 	}
 
 	if !exists {
-		listOpts := hcloud.ListOpts{Page: 1, PerPage: 0}
-		var serverStatus []hcloud.ServerStatus
-		serverStatus = append(serverStatus, hcloud.ServerStatusRunning)
-		serverStatus = append(serverStatus, hcloud.ServerStatusInitializing)
-		serverStatus = append(serverStatus, hcloud.ServerStatusStarting)
-		serverStatus = append(serverStatus, hcloud.ServerStatusDeleting)
-		serverListOpts := hcloud.ServerListOpts{ListOpts: listOpts, Name: "", Status: serverStatus}
-
-		servers, err := sc.client.Server.AllWithOpts(context.Background(), serverListOpts)
+		servers, err := sc.invalidate()
 		if err != nil {
-			klog.Errorf("getServers() error get servers. Hetzner API (ServerClient.AllWithOpts: https://godoc.org/github.com/hetznercloud/hcloud-go/hcloud#ServerClient.AllWithOpts), error: %v\n", err)
 			return nil, err
 		}
-		sc.Add(serverCache{
-			name:    serversCacheKey,
-			servers: servers,
-		})
 		return servers, nil
 	}
 
 	return nil, nil
+}
 
+func (sc *serversCache) invalidate() ([]*hcloud.Server, error) {
+	listOpts := hcloud.ListOpts{Page: 1, PerPage: 0}
+	var serverStatus []hcloud.ServerStatus
+	serverStatus = append(serverStatus, hcloud.ServerStatusRunning)
+	serverStatus = append(serverStatus, hcloud.ServerStatusInitializing)
+	serverStatus = append(serverStatus, hcloud.ServerStatusStarting)
+	serverStatus = append(serverStatus, hcloud.ServerStatusDeleting)
+	serverListOpts := hcloud.ServerListOpts{ListOpts: listOpts, Name: "", Status: serverStatus}
+
+	servers, err := sc.client.Server.AllWithOpts(context.Background(), serverListOpts)
+	if err != nil {
+		klog.Errorf("getServers() error get servers. Hetzner API (ServerClient.AllWithOpts: https://godoc.org/github.com/hetznercloud/hcloud-go/hcloud#ServerClient.AllWithOpts), error: %v\n", err)
+		return nil, err
+	}
+	sc.Add(serverCache{
+		name:    serversCacheKey,
+		servers: servers,
+	})
+	return servers, nil
 }
